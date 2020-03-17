@@ -85,6 +85,21 @@ const data = [
     thirdParagraph: `Hodor hodor - hodor... Hodor hodor hodor hodor. Hodor. Hodor! Hodor hodor, hodor hodor hodor hodor hodor; hodor hodor? Hodor!
           Hodor hodor, HODOR hodor, hodor hodor?! Hodor! Hodor hodor, HODOR hodor, hodor hodor, hodor, hodor hodor. Hodor, hodor.
           Hodor. Hodor, hodor, hodor. Hodor hodor... Hodor hodor hodor?! Hodor, hodor... Hodor hodor HODOR hodor, hodor hodor. Hodor.`
+  },
+  {
+    title: 'Corona Virus (COVID-2019) Update',
+    date: 'March 17th, 2020',
+    firstParagraph: `Development of the corona virus has been getting... blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+          blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+          blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah `,
+
+    secondParagraph: `blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+          blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+          blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah `,
+
+    thirdParagraph: `blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+          blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
+          blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah `
   }
 ];
 
@@ -112,3 +127,46 @@ const data = [
   Step 5: Add a new article to the array. Make sure it is in the same format as the others. Refresh the page to see the new article.
 
 */
+
+function createCard(dataObj){
+  const article = document.createElement("div");
+  const title = document.createElement("h2");
+  const date = document.createElement("p");
+  const p1 = document.createElement("p");
+  const p2 = document.createElement("p");
+  const p3 = document.createElement("p");
+  const button = document.createElement("span");
+
+  article.append(title, date, p1, p2, p3, button);
+
+  article.classList.add("article");
+  date.classList.add("date");
+  button.classList.add("expandButton");
+
+  title.textContent = dataObj.title;
+  date.textContent = dataObj.date;
+  p1.textContent = dataObj.firstParagraph;
+  p2.textContent = dataObj.secondParagraph;
+  p3.textContent = dataObj.thirdParagraph;
+
+  const open = "\u25bc";
+  const close = "\u25b2";
+
+  button.textContent = open + " Click to Expand";
+
+  button.addEventListener("click", (event) => {
+    if(button.textContent.includes(open)) {
+      button.textContent = close + " Click to Close";
+    } else {
+      button.textContent = open + " Click to Expand";
+    }
+    
+    article.classList.toggle("article-open");   
+    article.style.transition = "all .5s"; 
+  });
+
+  return article;
+}
+
+const articles = document.querySelector(".articles");
+data.forEach(dataObj => articles.appendChild(createCard(dataObj)));
