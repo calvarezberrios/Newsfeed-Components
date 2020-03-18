@@ -59,4 +59,14 @@ header.appendChild(menu);
 const menuBtn = document.querySelector(".menu-button");
 menuBtn.addEventListener("click", (event) => {
   menu.classList.toggle("menu--open");
+
+  document.addEventListener("click", (event2) => {
+    let targetElement = event2.target;
+    const menuUl = menu.querySelector("ul");
+  
+    if(menu !== targetElement && menuBtn !== targetElement && menuUl !== targetElement) {
+      menu.classList.remove("menu--open");
+    }
+  });
 });
+

@@ -1,3 +1,4 @@
+
 /* This is the data we will be using to create our article components */
 /* Look over this data, then proceed to line 91*/
 const data = [
@@ -88,7 +89,7 @@ const data = [
   },
   {
     title: 'Corona Virus (COVID-2019) Update',
-    date: 'March 17th, 2020',
+    date: 'Mar 17th, 2020',
     firstParagraph: `Development of the corona virus has been getting... blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
           blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
           blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah `,
@@ -136,18 +137,21 @@ function createCard(dataObj){
   const p2 = document.createElement("p");
   const p3 = document.createElement("p");
   const button = document.createElement("span");
+  const readBtn = document.createElement("button");
 
-  article.append(title, date, p1, p2, p3, button);
+  article.append(title, date, p1, p2, p3, button, readBtn);
 
   article.classList.add("article");
   date.classList.add("date");
   button.classList.add("expandButton");
+  readBtn.classList.add("read");
 
   title.textContent = dataObj.title;
   date.textContent = dataObj.date;
   p1.textContent = dataObj.firstParagraph;
   p2.textContent = dataObj.secondParagraph;
   p3.textContent = dataObj.thirdParagraph;
+  readBtn.textContent = "Mark As Read";
 
   const open = "\u25bc";
   const close = "\u25b2";
@@ -162,7 +166,12 @@ function createCard(dataObj){
     }
     
     article.classList.toggle("article-open");   
-    article.style.transition = "all .5s"; 
+    //article.style.transition = "all .5s"; 
+  });
+
+  readBtn.addEventListener("click", (event) => {
+    data.splice(data.includes(title.textContent), 1);
+    article.remove();
   });
 
   return article;
@@ -170,3 +179,198 @@ function createCard(dataObj){
 
 const articles = document.querySelector(".articles");
 data.forEach(dataObj => articles.appendChild(createCard(dataObj)));
+
+
+
+
+// Function formatDate takes a date and changes it to string like "Mar 17th, 2020"
+// @param date - takes the date value
+// returns the string date like `Mar 17th, 2020`
+function formatDate(date) {
+  const monthName = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+
+  const month = monthName[date.getMonth()];
+  const day = numberSuffix(date.getDate()+1);
+  const year = date.getFullYear();
+
+  return `${month} ${day}, ${year}`;
+  
+}
+
+
+// Function numberSuffix takes a number and adds the corresponding suffix (st, nd, rd, th) 
+// @param i - the number to add suffix to
+// returns the number with the suffix added (1st, 2nd, 3rd, etc...);
+function numberSuffix(i) {
+  var j = i % 10,
+      k = i % 100;
+  if (j == 1 && k != 11) {
+      return i + "st";
+  }
+  if (j == 2 && k != 12) {
+      return i + "nd";
+  }
+  if (j == 3 && k != 13) {
+      return i + "rd";
+  }
+  return i + "th";
+}
+
+
+
+function addNewArticle(articleTitle, articleDate, articlePara1, articlePara2, articlePara3) {
+  const newArticle = {
+    title: articleTitle,
+    date: formatDate(new Date(articleDate)),
+    firstParagraph: articlePara1,
+    secondParagraph: articlePara2,
+    thirdParagraph: articlePara3
+  }
+
+
+  data.push(newArticle);
+
+  articles.querySelectorAll("div").forEach(article => article.remove());
+  data.forEach(dataObj => articles.appendChild(createCard(dataObj)));
+}
+
+
+
+// Form to add new articles. hidden, will popup in the middle of screen
+
+const newArticleSection = document.createElement("div");
+const sectionTitle = document.createElement("h2");
+const newArticleForm = document.createElement("form");
+const titleLabel = document.createElement("label");
+const inputTitle = document.createElement("input");
+const dateLabel = document.createElement("label");
+const inputDate = document.createElement("input");
+const para1Label = document.createElement("label");
+const inputPara1 = document.createElement("textArea");
+const para2Label = document.createElement("label");
+const inputPara2 = document.createElement("textArea");
+const para3Label = document.createElement("label");
+const inputPara3 = document.createElement("textArea");
+const buttons = document.createElement("div");
+const create = document.createElement("button");
+const reset = document.createElement("input");
+const close = document.createElement("button");
+
+newArticleSection.id = "new-article";
+inputTitle.id = "title";
+inputTitle.type = "text";
+inputTitle.setAttribute("placeholder", "Enter Article Title");
+inputDate.id = "date";
+inputDate.type = "date";
+inputPara1.id = "para1";
+inputPara1.setAttribute("cols", "100");
+inputPara1.setAttribute("rows", "10");
+inputPara1.setAttribute("placeholder", "Enter Article Paragraphs");
+inputPara2.id = "para2";
+inputPara2.setAttribute("cols", "100");
+inputPara2.setAttribute("rows", "10");
+inputPara2.setAttribute("placeholder", "Enter Article Paragraphs");
+inputPara3.id = "para3";
+inputPara3.setAttribute("cols", "100");
+inputPara3.setAttribute("rows", "10");
+inputPara3.setAttribute("placeholder", "Enter Article Paragraphs");
+buttons.classList.add("form-buttons");
+create.textContent = "Create";
+reset.type = "reset";
+reset.classList.add("reset");
+reset.value = "Reset";
+close.textContent = "close";
+close.classList.add("closeForm");
+
+
+sectionTitle.textContent = "Create New Article";
+titleLabel.setAttribute("for", "title");
+titleLabel.textContent = "Title:";
+dateLabel.setAttribute("for", "date");
+dateLabel.textContent = "Date:";
+para1Label.setAttribute("for", "para1");
+para1Label.textContent = "Paragraph 1:";
+para2Label.setAttribute("for", "para2");
+para2Label.textContent = "Paragraph 2:";
+para3Label.setAttribute("for", "para3");
+para3Label.textContent = "Paragraph 3:";
+
+
+const body = document.querySelector("body");
+body.appendChild(newArticleSection);
+newArticleSection.append(sectionTitle, newArticleForm);
+buttons.append(create, reset);
+newArticleForm.append(titleLabel, inputTitle, dateLabel, inputDate, para1Label, inputPara1, para2Label, inputPara2, para3Label, inputPara3, buttons, close);
+
+function closeForm() {
+  TweenMax.fromTo("#new-article", 1, {
+      delay: .5,
+      opacity: 1,
+      display: "none"
+  }, {
+      delay: .8,
+      opacity: 0,
+      ease: Quad.easeInOut,
+      scale: 1,
+      transformOrigin: "50% 50% -0px",
+      yoyo: false,
+      repeat: 0,
+      repeatDelay: 1
+  });
+}
+
+close.addEventListener("click", (event) => {
+  event.preventDefault();
+
+  closeForm();
+});
+
+
+create.addEventListener("click", (event) => {
+  event.preventDefault();
+
+
+  if((inputTitle.value !== undefined || inputTitle !== "" || inputTitle !== " ") && inputDate.valueAsDate !== null) {
+    addNewArticle(inputTitle.value, 
+      inputDate.valueAsDate, 
+      inputPara1.value, 
+      inputPara2.value, 
+      inputPara3.value);
+  }
+
+  
+  
+  //newArticleSection.style.top = "-300%";
+  
+  closeForm();
+  newArticleForm.reset();
+  
+});
+
+
+const addNew = document.createElement("button");
+addNew.textContent = "Add New Article";
+addNew.style.margin = "20px 10%";
+addNew.style.fontSize = "16px";
+articles.prepend(addNew);
+
+addNew.addEventListener("click", (event) => {
+  TweenMax.fromTo("#new-article", 1, {
+      delay: .5,
+      opacity: 0,
+      display: "block"
+  }, {
+      delay: .8,
+      opacity: 1,
+      ease: Quad.easeInOut,
+      scale: 1,
+      transformOrigin: "50% 50% -0px",
+      yoyo: false,
+      repeat: 0,
+      repeatDelay: 1
+  });
+});
+
+
+
+
